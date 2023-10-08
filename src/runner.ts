@@ -52,7 +52,10 @@ export async function getCliCommand(
   if (isGlobal)
     return await fn(await getGlobalAgent(), args)
 
-  let agent = (await detect({ ...options, cwd })) || (await getDefaultAgent(options.programmatic))
+  let agent = (await detect({ ...options, cwd })) || (await getDefaultAgent({
+    programmatic: options.programmatic,
+    projectPath: cwd,
+  }))
   if (agent === 'prompt') {
     agent = (
       await prompts({
