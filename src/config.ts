@@ -53,8 +53,10 @@ export async function getConfig(): Promise<Config> {
   return config
 }
 
-export async function getDefaultAgent(programmatic?: boolean) {
-  const { defaultAgent } = await getConfig()
+interface Opt { projectPath?: string, programmatic?: boolean }
+export async function getDefaultAgent(opt: Opt = {}) {
+  const { projectPath, programmatic } = opt
+  const defaultAgent = await getAgentByProject(projectPath, { isFullMatch: false }) as string
   if (defaultAgent === 'prompt' && (programmatic || process.env.CI))
     return 'npm'
   return defaultAgent

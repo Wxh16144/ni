@@ -63,7 +63,7 @@ export async function getCliCommand(
   }
 
   if (!agent)
-    agent = await getDefaultAgent(options.programmatic)
+    agent = await getDefaultAgent({ programmatic: options.programmatic, projectPath: cwd })
 
   if (agent === 'prompt') {
     agent = (
