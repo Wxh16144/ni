@@ -18,11 +18,13 @@ const rcPath = customRcPath || defaultRcPath
 interface Config {
   defaultAgent: Agent | 'prompt'
   globalAgent: Agent
+  projectAgent?: Record<string, Agent | 'prompt'>
 }
 
 const defaultConfig: Config = {
   defaultAgent: 'prompt',
   globalAgent: 'npm',
+  projectAgent: {},
 }
 
 let config: Config | undefined
@@ -61,4 +63,38 @@ export async function getDefaultAgent(programmatic?: boolean) {
 export async function getGlobalAgent() {
   const { globalAgent } = await getConfig()
   return globalAgent
+}
+
+export async function getAgentByProject(
+  projectPath = process.cwd(),
+  options?: { isFullMatch?: boolean },
+): Promise<Agent | 'prompt'> {
+  const {
+    projectAgent,
+    defaultAgent,
+  } = await getConfig()
+
+  const finallyProjectAgent: Record<string, Agent | 'prompt'> = {}
+
+  // replace the variable
+  for (const key in projectAgent) {
+    let cloneKey = key
+    // {ENV} => process.env.ENV
+    for (const variable in process.env)
+      cloneKey = cloneKey.replace(`{${variable}}`, process.env[variable] || '')
+
+    // filter no-absolute path
+    if (path.isAbsolute(cloneKey))
+      finallyProjectAgent[cloneKey.replace(/\/$/, '')] = projectAgent[key]
+  }
+
+  // find the full match
+  if (options?.isFullMatch)
+    return finallyProjectAgent[projectPath]
+
+  const matchingKeys = Object.keys(finallyProjectAgent).filter(key =>
+    projectPath.startsWith(key),
+  ).sort()
+
+  return finallyProjectAgent[matchingKeys[0]] || defaultAgent
 }
