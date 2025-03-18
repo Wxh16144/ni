@@ -1,18 +1,18 @@
 {
-  "name": "@antfu/ni",
+  "name": "@wuxh/ni",
   "type": "module",
-  "version": "24.3.0",
-  "packageManager": "pnpm@10.6.5",
+  "version": "24.2.0-fork.2",
+  "packageManager": "pnpm@8.6.12",
   "description": "Use the right package manager",
   "author": "Anthony Fu <anthonyfu117@hotmail.com>",
   "license": "MIT",
-  "homepage": "https://github.com/antfu-collective/ni#readme",
+  "homepage": "https://github.com/wxh16144/ni#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/antfu-collective/ni.git"
+    "url": "git+https://github.com/wxh16144/ni.git"
   },
   "bugs": {
-    "url": "https://github.com/antfu-collective/ni/issues"
+    "url": "https://github.com/wxh16144/ni/issues"
   },
   "exports": {
     ".": "./dist/index.mjs",
@@ -46,37 +46,42 @@
     "nr": "tsx src/commands/nr.ts",
     "build": "unbuild",
     "stub": "unbuild --stub",
-    "release": "bumpp && pnpm publish",
+    "release": "bumpp && npm publish",
     "typecheck": "tsc",
     "prepare": "npx simple-git-hooks",
-    "lint": "eslint",
+    "lint": "eslint .",
     "test": "vitest"
   },
   "dependencies": {
-    "ansis": "catalog:prod",
-    "fzf": "catalog:prod",
-    "package-manager-detector": "catalog:prod",
-    "tinyexec": "catalog:prod"
+    "ansis": "^3.17.0",
+    "fzf": "^0.5.2",
+    "package-manager-detector": "^1.0.0",
+    "tinyexec": "^0.3.2"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "catalog:dev",
-    "@posva/prompts": "catalog:prod-inlined",
-    "@types/ini": "catalog:dev",
-    "@types/node": "catalog:dev",
-    "@types/which": "catalog:dev",
-    "bumpp": "catalog:dev",
-    "eslint": "catalog:dev",
-    "ini": "catalog:prod-inlined",
-    "lint-staged": "catalog:dev",
-    "simple-git-hooks": "catalog:dev",
-    "taze": "catalog:dev",
-    "terminal-link": "catalog:prod-inlined",
-    "tinyglobby": "catalog:dev",
-    "tsx": "catalog:dev",
-    "typescript": "catalog:dev",
-    "unbuild": "catalog:dev",
-    "vitest": "catalog:dev",
-    "which": "catalog:prod-inlined"
+    "@antfu/eslint-config": "^4.10.1",
+    "@posva/prompts": "^2.4.4",
+    "@types/ini": "^4.1.1",
+    "@types/node": "^22.13.10",
+    "@types/which": "^3.0.4",
+    "bumpp": "^10.1.0",
+    "eslint": "^9.22.0",
+    "ini": "^5.0.0",
+    "lint-staged": "^15.5.0",
+    "simple-git-hooks": "^2.11.1",
+    "taze": "^19.0.2",
+    "terminal-link": "^3.0.0",
+    "tinyglobby": "^0.2.12",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.2",
+    "unbuild": "^3.5.0",
+    "vitest": "^3.0.8",
+    "which": "^5.0.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
   },
   "simple-git-hooks": {
     "pre-commit": "pnpm lint-staged"
