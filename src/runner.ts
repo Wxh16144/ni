@@ -54,6 +54,9 @@ export async function getCliCommand(
 
   let agent: string | undefined = await detect({ ...options, cwd })
 
+  if (!agent)
+    agent = await getDefaultAgent({ programmatic: options.programmatic, projectPath: cwd })
+
   if (!agent) {
     // detect based on project
     // see: https://github.com/antfu/ni/issues/74
@@ -61,9 +64,6 @@ export async function getCliCommand(
     if (mayBeAgent in AGENTS && mayBeAgent !== 'prompt')
       agent = mayBeAgent
   }
-
-  if (!agent)
-    agent = await getDefaultAgent({ programmatic: options.programmatic, projectPath: cwd })
 
   if (agent === 'prompt') {
     agent = (
