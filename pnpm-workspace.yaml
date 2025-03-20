@@ -1,3 +1,5 @@
+onlyBuiltDependencies:
+  - esbuild
 packages: []
 catalogs:
   dev:
@@ -25,3 +27,9 @@ catalogs:
     ini: ^5.0.0
     terminal-link: ^3.0.0
     which: ^5.0.0
+  conflicts_prod_h1_0_0:
+    package-manager-detector: ^1.0.0
+  conflicts_prod_h0_3_2:
+    tinyexec: ^0.3.2
+  conflicts_dev_h3_0_8:
+    vitest: ^3.0.8
