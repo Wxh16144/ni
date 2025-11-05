@@ -1,7 +1,7 @@
 {
   "name": "@wuxh/ni",
   "type": "module",
-  "version": "27.0.1-fork.0",
+  "version": "27.0.1-fork.1",
   "packageManager": "pnpm@10.19.0",
   "description": "Use the right package manager",
   "author": "Anthony Fu <anthonyfu117@hotmail.com>",
