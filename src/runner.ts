@@ -9,7 +9,7 @@ import c from 'ansis'
 import { AGENTS } from 'package-manager-detector'
 import { x } from 'tinyexec'
 import { version } from '../package.json'
-import { getDefaultAgent, getGlobalAgent, getUseSfw } from './config'
+import { getAgentByProject, getDefaultAgent, getGlobalAgent, getUseSfw } from './config'
 import { detect } from './detect'
 import { getEnvironmentOptions } from './environment'
 import { getCommand, UnsupportedCommand } from './parse'
@@ -61,7 +61,19 @@ export async function getCliCommand(
   if (isGlobal)
     return await fn(await getGlobalAgent(), args)
 
-  let agent = (await detect({ ...options, cwd })) || (await getDefaultAgent(options.programmatic))
+  let agent: string | undefined = await detect({ ...options, cwd })
+
+  if (!agent)
+    agent = await getDefaultAgent({ programmatic: options.programmatic, projectPath: cwd })
+
+  if (!agent) {
+    // detect based on project
+    // see: https://github.com/antfu/ni/issues/74
+    const mayBeAgent = await getAgentByProject(cwd, { isFullMatch: true })
+    if (mayBeAgent in AGENTS && mayBeAgent !== 'prompt')
+      agent = mayBeAgent
+  }
+
   if (agent === 'prompt') {
     agent = (
       await prompts({

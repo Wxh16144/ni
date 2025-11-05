@@ -20,6 +20,7 @@ interface Config {
   globalAgent: Agent
   runAgent: 'node' | undefined
   useSfw: boolean
+  projectAgent?: Record<string, Agent | 'prompt'>
 }
 
 const defaultConfig: Config = {
@@ -27,6 +28,7 @@ const defaultConfig: Config = {
   globalAgent: 'npm',
   runAgent: undefined,
   useSfw: false,
+  projectAgent: {},
 }
 
 let config: Config | undefined
@@ -61,8 +63,10 @@ export async function getConfig(): Promise<Config> {
   return config
 }
 
-export async function getDefaultAgent(programmatic?: boolean) {
-  const { defaultAgent } = await getConfig()
+interface Opt { projectPath?: string, programmatic?: boolean }
+export async function getDefaultAgent(opt: Opt = {}) {
+  const { projectPath, programmatic } = opt
+  const defaultAgent = await getAgentByProject(projectPath, { isFullMatch: false }) as string
   if (defaultAgent === 'prompt' && (programmatic || process.env.CI))
     return 'npm'
   return defaultAgent
@@ -81,4 +85,38 @@ export async function getRunAgent() {
 export async function getUseSfw() {
   const { useSfw } = await getConfig()
   return useSfw
+}
+
+export async function getAgentByProject(
+  projectPath = process.cwd(),
+  options?: { isFullMatch?: boolean },
+): Promise<Agent | 'prompt'> {
+  const {
+    projectAgent,
+    defaultAgent,
+  } = await getConfig()
+
+  const finallyProjectAgent: Record<string, Agent | 'prompt'> = {}
+
+  // replace the variable
+  for (const key in projectAgent) {
+    let cloneKey = key
+    // {ENV} => process.env.ENV
+    for (const variable in process.env)
+      cloneKey = cloneKey.replace(`{${variable}}`, process.env[variable] || '')
+
+    // filter no-absolute path
+    if (path.isAbsolute(cloneKey))
+      finallyProjectAgent[cloneKey.replace(/\/$/, '')] = projectAgent[key]
+  }
+
+  // find the full match
+  if (options?.isFullMatch)
+    return finallyProjectAgent[projectPath]
+
+  const matchingKeys = Object.keys(finallyProjectAgent).filter(key =>
+    projectPath.startsWith(key),
+  ).sort()
+
+  return finallyProjectAgent[matchingKeys[0]] || defaultAgent
 }
