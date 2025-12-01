@@ -43,7 +43,7 @@ export async function detect({ autoInstall, programmatic, cwd }: DetectOptions =
       }
       return undefined
     },
-    packageJsonParser: (content, filepath) => parsePackageJSON(filepath),
+    packageJsonParser: parsePackageJSON,
   }) || {}
 
   // auto install

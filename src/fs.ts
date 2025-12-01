@@ -4,9 +4,7 @@ import { resolve } from 'node:path'
 import process from 'node:process'
 import stripJsonComments from 'strip-json-comments'
 
-export function parsePackageJSON(filePath: string) {
-  const jsonString = fs.readFileSync(filePath, 'utf8')
-
+export function parsePackageJSON(jsonString: string): Record<string, any> {
   /**
    * https://bun.com/blog/bun-v1.1.5#package-json-with-comments-and-trailing-commas
    * Bun allows comments and trailing commas in package.json, so we need to strip them before parsing.
@@ -22,7 +20,8 @@ export function getPackageJSON(ctx?: RunnerContext): any {
 
   if (fs.existsSync(path)) {
     try {
-      return parsePackageJSON(path)
+      const raw = fs.readFileSync(path, 'utf8')
+      return parsePackageJSON(raw)
     }
     catch (e) {
       if (!ctx?.programmatic) {
