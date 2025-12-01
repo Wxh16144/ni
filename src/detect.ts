@@ -4,6 +4,7 @@ import process from 'node:process'
 import prompts from '@posva/prompts'
 import { detect as detectPM } from 'package-manager-detector'
 import { INSTALL_PAGE } from 'package-manager-detector/constants'
+import stripJsonComments from 'strip-json-comments'
 import terminalLink from 'terminal-link'
 import { x } from 'tinyexec'
 import { cmdExists } from './utils'
@@ -42,6 +43,7 @@ export async function detect({ autoInstall, programmatic, cwd }: DetectOptions =
       }
       return undefined
     },
+    packageJsonParser: content => JSON.parse(stripJsonComments(content, { trailingCommas: true })),
   }) || {}
 
   // auto install

@@ -61,6 +61,7 @@
     "ansis": "catalog:prod",
     "fzf": "catalog:prod",
     "package-manager-detector": "catalog:prod",
+    "strip-json-comments": "catalog:prod",
     "tinyexec": "catalog:prod",
     "tinyglobby": "catalog:prod"
   },

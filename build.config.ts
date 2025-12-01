@@ -17,7 +17,7 @@ export default defineBuildConfig({
       'which',
       'ini',
       '@posva/prompts',
-
+      'strip-json-comments',
       'terminal-link',
       'ansi-escapes',
       'environment',
