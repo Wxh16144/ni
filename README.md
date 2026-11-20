@@ -195,13 +195,15 @@ nr dev --port=3000
 nr
 
 # interactively select the script to run
+# the last script is listed first
 # supports https://www.npmjs.com/package/npm-scripts-info convention
 ```
 
 ```bash
 nr -
 
-# rerun the last command
+# rerun the last script
+# the last script is whatever `nr <script>`, `nr -p <script>` or the picker ran
 # see `lastCommand` in the config section to keep one record per terminal
 ```
 
@@ -210,6 +212,7 @@ nr -p
 nr -p dev
 
 # interactively select the package and script to run
+# the picked script is remembered like any other, so `nr -` reruns it
 ```
 
 <details>
